@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% include "inc/_sidebar.html" %}
+{% block title %}
+    {{ category.title }} :: {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+{% include "inc/_sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class = "col-md-8" >
+                {% for item in news %}
+                <div class="card mb-3">
+                   {{ forloop.counter }}
+                    Категория:  <a href = "{% url 'Category' item.category.pk %}"> {{item.category}} </a>
+                   <div class = "media" style = "display:flex">
+                       {% if item.photo %}
+                         <img src="{{ item.photo.url }}" class="mr-1" width = "350" alt="Photo">
+                       {% else %}
+                        <h6> Фото нет </h6>
+                       {% endif %}
+                       <div class = "media-body">
+                            <div class="card-body">
+                                <h5 class="card-title {% cycle 'text-success' 'text-danger' 'text-primary' %}">{{item.title}}</h5>
+                                {% autoescape off %}
+                                <p class="card-text"> {{ item.content|truncatewords:60|linebreaks}}</p>
+
+                                {% endautoescape %}
+                                <a href = '#' class="btn-btn-primary">Read more...</a>
+                            </div>
+                       </div>
+                   </div>
+                </div>
+                {% endfor %}
+            </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+{% include "inc/_sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="card mb-3">
+    {{ forloop.counter }}
+    <div class="card-header"> Категория: {% if item.category and item.category.pk %}
+        <a href="{{ news_item.category.get_absolute_url }}">{{ news_item.category}}</a> {% else %} {{item.category|default:"Без категории"}} {% endif %} </a>
+    </div>
+    {% if item.photo %}
+    <img src="{{ news_item.photo.url }}" class="mr-1" width="350" alt="Photo"> {% else %}
+    <h6> Фото нет </h6>
+    {% endif %}
+
+    <div class="card-body">
+        <h5 class="card-title {% cycle 'text-success' 'text-danger' 'text-primary' %}">{{item.title}}</h5>
+        {% autoescape off %}
+        <p class="card-text"> {{ item.content|linebreaks}}</p>
+
+        {% endautoescape %}
+
+    </div>
+</div>
+
+
+{% endblock %}
