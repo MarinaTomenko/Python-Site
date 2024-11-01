@@ -8,6 +8,8 @@
 
 {% endblock %}
 {% block content %}
+{{ mixin_group }}
+
     {% for item in object_list %}
     <div class="card mb-3" style="width: 1000px;">
         {{ forloop.counter }}

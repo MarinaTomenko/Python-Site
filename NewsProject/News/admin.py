@@ -7,6 +7,8 @@ class NewsAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')
     list_filter = ('is_published', 'id')
     list_editable = ['is_published', 'category']
+    fields = ('title', 'content', 'photo', 'get_photo', 'is_published', 'created_at', 'updated_at')
+    readonly_fields = ('get_photo', 'created_at', 'updated_at')
 
     def get_photo(self, obj):
         if obj.photo:

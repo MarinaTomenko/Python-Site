@@ -4,17 +4,20 @@ from .forms import NewsForm
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.http import HttpResponse
-
-class HomeNews(ListView):
+from .utils import MyMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+class HomeNews(ListView, MyMixin):
     model = News
     context_object_name = 'news'
     template_name = 'News/home_news_list.html'
     extra_context = {'title': 'Главная'}
+    mixin_group = 'hello world'
     def get_context_data(self, *, object_list=None, **kwargs):
         print("template_name")
         print(self.template_name)
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Главная страница'
+        context['title'] = self.get_upper('Главная страница')
+        context['mixin_group'] = self.get_prop()
         print("context")
         print(context)
         return context
@@ -22,7 +25,7 @@ class HomeNews(ListView):
         return News.objects.filter(is_published=True).select_related('category')
 
 
-class NewsByCategory(ListView):
+class NewsByCategory(ListView, MyMixin):
     model = News
     template_name = 'News/home_news_list.html'
     context_object_name = 'news'
@@ -30,7 +33,7 @@ class NewsByCategory(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = Category.objects.get(pk=self.kwargs['category_id'])
+        context['title'] = self.get_upper(Category.objects.get(pk=self.kwargs['category_id']))
         return context
     def get_queryset(self):
             return News.objects.filter(category_id=self.kwargs['category_id'], is_published=True).select_related('category')
@@ -42,6 +45,7 @@ class ViewNews(DetailView):
 class AddNews(CreateView):
     form_class = NewsForm
     template_name = 'News/add_news.html'
+    login_url = '/admin/'
 
 #def index(request):
 #    news = News.objects.all()
